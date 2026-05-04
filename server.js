@@ -74,15 +74,14 @@ function analyseOrders(orders, name = 'Aman') {
 
   const topDishName = Object.keys(dishMap)
     .sort((a, b) => dishMap[b] - dishMap[a])[0];
+  const topDishOrders = orders.filter(o => o.items.some(i => i.name === topDishName));
+  const topDishAvg = topDishOrders.length > 0
+    ? Math.round(topDishOrders.reduce((s, o) => s + o.amount, 0) / topDishOrders.length)
+    : 0;
   const topDish = {
-    name: topDishName,
-    count: dishMap[topDishName],
-    avgPrice: Math.round(
-      orders
-        .filter(o => o.items.some(i => i.name === topDishName))
-        .reduce((s, o) => s + o.amount, 0) /
-      orders.filter(o => o.items.some(i => i.name === topDishName)).length
-    )
+    name: topDishName || 'Unknown',
+    count: dishMap[topDishName] || 0,
+    avgPrice: topDishAvg
   };
 
   // ── PEAK HOUR ─────────────────────────────────────────────────────────────

@@ -1,0 +1,8 @@
+{
+  "python.analysis.include": [],
+  "python.analysis.exclude": ["**/node_modules", "**/.venv"],
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  }
+}
