@@ -230,7 +230,7 @@ let data = null;
 // ─── FETCH INSIGHTS FROM SERVER ───────────────────────────────────────────────
 async function loadInsights() {
   try {
-    const res = await fetch('/api/insights');
+    const res = await fetch('/api/insights', { signal: AbortSignal.timeout(60000) });
     const json = await res.json();
     data = json.data;
     populateUI(data);
