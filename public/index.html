@@ -1,247 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Swiggy Wrapped</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;background:#0A0A0A}
-:root{
-  --bg:#111008;
-  --orange:#FC8019;
-  --orange2:#FF9A45;
-  --cream:#FFF3E0;
-  --dim:#8A7560;
-  --white:#FDFAF5;
-  --green:#4ADE80;
-  --red:#F87171;
-  --display:'Bebas Neue',sans-serif;
-  --body:'Plus Jakarta Sans',sans-serif;
-}
-body{display:flex;align-items:center;justify-content:center;font-family:var(--body);min-height:100vh;width:100vw;overflow:hidden;}
-#wrap{font-family:var(--body);background:var(--bg);border-radius:28px;overflow:hidden;position:relative;width:480px;height:720px;box-shadow:0 40px 120px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06)}
-#wrap::before{content:'';position:absolute;inset:0;opacity:.4;pointer-events:none;z-index:10;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E")}
-.dots{position:absolute;top:22px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:20}
-.dot{width:24px;height:3px;border-radius:2px;background:rgba(255,255,255,.2);transition:all .4s}
-.dot.active{background:var(--orange);width:32px}
-.dot.done{background:rgba(255,255,255,.5)}
-.card{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:64px 44px 90px;opacity:0;pointer-events:none;transform:translateY(20px);transition:all .5s cubic-bezier(.23,1,.32,1)}
-.card.active{opacity:1;pointer-events:all;transform:translateY(0)}
-.card.exit{opacity:0;transform:translateY(-20px)}
-.nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:20px 28px;z-index:20;background:linear-gradient(transparent,rgba(17,16,8,.95))}
-.nav-btn{font-family:var(--body);font-size:13px;font-weight:700;padding:11px 26px;border-radius:100px;border:none;cursor:pointer;transition:all .2s}
-.btn-prev{background:rgba(255,255,255,.08);color:rgba(255,255,255,.5)}
-.btn-prev:hover{background:rgba(255,255,255,.15);color:var(--white)}
-.btn-next{background:var(--orange);color:#fff}
-.btn-next:hover{background:var(--orange2);transform:scale(1.03)}
-.card-count{font-size:12px;color:var(--dim);font-weight:600}
-.eyebrow{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--orange);margin-bottom:12px}
-.hero-num{font-family:var(--display);font-size:100px;color:var(--white);line-height:.9}
-.hero-sub{font-size:15px;color:rgba(253,250,245,.6);margin-top:14px;line-height:1.6;text-align:center;max-width:340px}
-.stat-row{display:flex;gap:12px;margin-top:24px;width:100%}
-.stat-box{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 12px;text-align:center;flex:1}
-.stat-val{font-family:var(--display);font-size:32px;color:var(--white);line-height:1}
-.stat-lbl{font-size:10px;color:var(--dim);margin-top:4px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
-.pill{display:inline-block;padding:5px 14px;border-radius:100px;font-size:12px;font-weight:700}
-.pill-orange{background:rgba(252,128,25,.15);color:var(--orange);border:1px solid rgba(252,128,25,.3)}
-.pill-green{background:rgba(74,222,128,.12);color:var(--green);border:1px solid rgba(74,222,128,.25)}
-.pill-red{background:rgba(248,113,113,.12);color:var(--red);border:1px solid rgba(248,113,113,.25)}
-.bar-row{width:100%;margin:7px 0}
-.bar-label{display:flex;justify-content:space-between;font-size:12px;color:rgba(253,250,245,.65);margin-bottom:5px;font-weight:600}
-.bar-track{height:8px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
-.bar-fill{height:100%;border-radius:99px;background:var(--orange);transition:width 1s ease}
-.personality{background:rgba(252,128,25,.08);border:1px solid rgba(252,128,25,.2);border-radius:20px;padding:28px 32px;text-align:center;width:100%}
-.pers-emoji{font-size:52px;margin-bottom:12px}
-.pers-type{font-family:var(--display);font-size:44px;color:var(--orange);line-height:1;margin-bottom:10px}
-.pers-desc{font-size:13px;color:rgba(253,250,245,.65);line-height:1.65}
-.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-top:18px}
-.share-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px;text-align:center}
-.share-item .val{font-family:var(--display);font-size:28px;color:var(--white);line-height:1}
-.share-item .lbl{font-size:10px;color:var(--dim);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
-.timeline{display:flex;align-items:flex-end;gap:7px;height:90px;margin-top:20px;width:100%}
-.tl-col{flex:1;display:flex;flex-direction:column;align-items:center}
-.tl-bar{width:100%;border-radius:4px 4px 0 0;background:rgba(252,128,25,.2);transition:height .8s ease}
-.tl-bar.peak{background:var(--orange)}
-.tl-label{font-size:9px;color:var(--dim);margin-top:5px;font-weight:700}
-.swiggy-badge{position:absolute;top:22px;right:24px;z-index:20;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--dim);letter-spacing:.06em}
-.swiggy-dot{width:8px;height:8px;border-radius:50%;background:var(--orange)}
-/* loading */
-#loading{position:fixed;inset:0;background:#0A0A0A;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100}
-#loading .logo{font-family:var(--display);font-size:48px;color:var(--orange);letter-spacing:2px}
-#loading .sub{font-size:14px;color:var(--dim);margin-top:8px;font-family:var(--body)}
-#loading .spinner{width:32px;height:32px;border:3px solid rgba(252,128,25,.2);border-top-color:var(--orange);border-radius:50%;animation:spin 1s linear infinite;margin-top:24px}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-.card.active .eyebrow{animation:fadeUp .4s .1s both}
-.card.active .hero-num{animation:fadeUp .5s .2s both}
-.card.active .hero-sub{animation:fadeUp .5s .32s both}
-.card.active .stat-row{animation:fadeUp .5s .3s both}
-.card.active .personality{animation:fadeUp .5s .2s both}
-.card.active .share-grid{animation:fadeUp .5s .22s both}
-</style>
-</head>
-<body>
-
-<!-- Loading screen -->
-<div id="loading">
-  <div class="logo">SWIGGY WRAPPED</div>
-  <div class="sub">Loading your food story...</div>
-  <div class="spinner"></div>
-</div>
-
-<!-- Main app -->
-<div id="wrap" style="display:none">
-  <div class="swiggy-badge"><div class="swiggy-dot"></div>SWIGGY WRAPPED</div>
-  <div class="dots" id="dots"></div>
-
-  <!-- Card 1: Total orders -->
-  <div class="card active" id="c1">
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 60% 30%,rgba(252,128,25,.18) 0%,transparent 65%)"></div>
-    <div style="position:absolute;width:340px;height:340px;border-radius:50%;border:1px solid rgba(252,128,25,.1);top:50%;left:50%;transform:translate(-50%,-55%)"></div>
-    <div style="position:absolute;width:220px;height:220px;border-radius:50%;border:1px solid rgba(252,128,25,.16);top:50%;left:50%;transform:translate(-50%,-55%)"></div>
-    <div style="position:relative;text-align:center;z-index:2;width:100%">
-      <div class="eyebrow">Your 2025 in food</div>
-      <div class="hero-num" id="c1-orders">—</div>
-      <div style="font-family:var(--display);font-size:30px;color:var(--orange);margin-top:-4px">ORDERS PLACED</div>
-      <div class="hero-sub">You ordered food <strong style="color:var(--white)" id="c1-freq">—</strong> on average. That's commitment.</div>
-      <div class="stat-row">
-        <div class="stat-box"><div class="stat-val" id="c1-spent">—</div><div class="stat-lbl">Total Spent</div></div>
-        <div class="stat-box"><div class="stat-val" id="c1-rests">—</div><div class="stat-lbl">Restaurants</div></div>
-        <div class="stat-box"><div class="stat-val" id="c1-cuisines">—</div><div class="stat-lbl">Cuisines</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 2: Top dish -->
-  <div class="card" id="c2">
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 40% 60%,rgba(252,128,25,.14) 0%,transparent 60%)"></div>
-    <div style="text-align:center;position:relative;z-index:2">
-      <div class="eyebrow">Your one true love</div>
-      <div style="font-size:80px;margin-bottom:10px">🍛</div>
-      <div class="hero-num" style="font-size:72px" id="c2-dish">—</div>
-      <div class="hero-sub">Ordered <strong style="color:var(--orange)" id="c2-count">—</strong> times this year. Once a week. You're not even sorry.</div>
-      <div style="margin-top:18px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-        <span class="pill pill-orange">Top dish · 2024 & 2025</span>
-        <span class="pill pill-green" id="c2-avg">—</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 3: Top restaurant -->
-  <div class="card" id="c3">
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 70% 40%,rgba(74,222,128,.1) 0%,transparent 60%)"></div>
-    <div style="text-align:center;position:relative;z-index:2;width:100%">
-      <div class="eyebrow">Your ride or die</div>
-      <div style="font-size:60px;margin-bottom:14px">🏆</div>
-      <div class="hero-num" style="font-size:56px;color:var(--green)" id="c3-rest">—</div>
-      <div class="hero-sub">Ordered <strong style="color:var(--white)" id="c3-count">—</strong> times. You've spent more time waiting for them than most people spend on relationships.</div>
-      <div class="stat-row" style="margin-top:20px">
-        <div class="stat-box"><div class="stat-val" style="color:var(--green)" id="c3-orders">—</div><div class="stat-lbl">Orders</div></div>
-        <div class="stat-box"><div class="stat-val" style="color:var(--green)" id="c3-spent">—</div><div class="stat-lbl">Spent</div></div>
-        <div class="stat-box"><div class="stat-val" style="color:var(--green)" id="c3-rating">—</div><div class="stat-lbl">Avg rating</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 4: Peak time -->
-  <div class="card" id="c4">
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 70%,rgba(252,128,25,.1) 0%,transparent 55%)"></div>
-    <div style="text-align:center;position:relative;z-index:2;width:100%">
-      <div class="eyebrow">When you get hungry</div>
-      <div class="hero-num" style="font-size:86px" id="c4-hour">—</div>
-      <div style="font-size:13px;color:var(--dim);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:6px">Peak ordering hour</div>
-      <div class="timeline" id="timeline"></div>
-      <div class="hero-sub"><strong style="color:var(--white)" id="c4-pct">—</strong> of your orders happen after 9 PM.</div>
-    </div>
-  </div>
-
-  <!-- Card 5: Cuisine DNA -->
-  <div class="card" id="c5">
-    <div style="text-align:center;width:100%;position:relative;z-index:2">
-      <div class="eyebrow">Your cuisine DNA</div>
-      <div style="font-family:var(--display);font-size:34px;color:var(--white);margin-bottom:18px">WHAT YOU ACTUALLY EAT</div>
-      <div id="cuisine-bars" style="width:100%"></div>
-      <div style="margin-top:16px"><span class="pill pill-orange">You think you eat healthy. The data disagrees.</span></div>
-    </div>
-  </div>
-
-  <!-- Card 6: The bill -->
-  <div class="card" id="c6">
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 60%,rgba(248,113,113,.1) 0%,transparent 55%)"></div>
-    <div style="text-align:center;position:relative;z-index:2;width:100%">
-      <div class="eyebrow">The bill moment 💸</div>
-      <div class="hero-num" style="font-size:72px;color:var(--cream)" id="c6-total">—</div>
-      <div style="font-size:13px;color:var(--dim);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:6px">Spent on Swiggy in 2025</div>
-      <div class="hero-sub">That's <strong style="color:var(--white)" id="c6-monthly">—</strong> a month.</div>
-      <div class="stat-row" style="margin-top:20px">
-        <div class="stat-box"><div class="stat-val" style="color:var(--red)" id="c6-avg">—</div><div class="stat-lbl">Avg / month</div></div>
-        <div class="stat-box"><div class="stat-val" id="c6-order">—</div><div class="stat-lbl">Avg order</div></div>
-        <div class="stat-box"><div class="stat-val" style="color:var(--green)" id="c6-saved">—</div><div class="stat-lbl">Coupons saved</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 7: Personality -->
-  <div class="card" id="c7">
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(252,128,25,.15) 0%,transparent 55%)"></div>
-    <div style="text-align:center;position:relative;z-index:2;width:100%">
-      <div class="eyebrow">Your food personality</div>
-      <div class="personality">
-        <div class="pers-emoji" id="c7-emoji">—</div>
-        <div class="pers-type" id="c7-type">—</div>
-        <div class="pers-desc" id="c7-desc">—</div>
-      </div>
-      <div style="margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap" id="c7-tags"></div>
-    </div>
-  </div>
-
-  <!-- Card 8: Share -->
-  <div class="card" id="c8">
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(252,128,25,.2) 0%,transparent 60%)"></div>
-    <div style="text-align:center;position:relative;z-index:2;width:100%">
-      <div class="eyebrow">Your food story · 2025</div>
-      <div style="font-family:var(--display);font-size:42px;color:var(--white);line-height:.95;margin-bottom:6px" id="c8-name">— WRAPPED</div>
-      <div class="share-grid">
-        <div class="share-item"><div class="val" id="s-orders">—</div><div class="lbl">Orders</div></div>
-        <div class="share-item"><div class="val" id="s-spent">—</div><div class="lbl">Spent</div></div>
-        <div class="share-item"><div class="val" style="font-size:16px;line-height:1.3;padding-top:4px" id="s-dish">—</div><div class="lbl">Top dish</div></div>
-        <div class="share-item"><div class="val" style="font-size:16px;line-height:1.3;padding-top:4px" id="s-rest">—</div><div class="lbl">Fav spot</div></div>
-        <div class="share-item"><div class="val" id="s-hour">—</div><div class="lbl">Peak hour</div></div>
-        <div class="share-item"><div class="val" style="font-size:15px;line-height:1.3;padding-top:4px" id="s-type">—</div><div class="lbl">Personality</div></div>
-      </div>
-      <div style="margin-top:14px;font-size:11px;color:var(--dim);font-weight:700;letter-spacing:.08em">swiggy-wrapped.vercel.app</div>
-    </div>
-  </div>
-
-  <div class="nav">
-    <button class="nav-btn btn-prev" id="prevBtn" onclick="prev()">← Back</button>
-    <div class="card-count" id="cardCount">1 / 8</div>
-    <button class="nav-btn btn-next" id="nextBtn" onclick="next()">Next →</button>
-  </div>
-</div>
-
-<script>
 let cur = 0;
 const total = 8;
 let data = null;
 
-// ─── FETCH INSIGHTS FROM SERVER ───────────────────────────────────────────────
 async function loadInsights() {
-  let attempts = 0;
-  const maxAttempts = 5;
-  
-  while (attempts < maxAttempts) {
+  const statusEl = document.querySelector('#loading .sub');
+  for (let i = 1; i <= 6; i++) {
     try {
-      attempts++;
-      document.querySelector('#loading .sub').textContent = 
-        attempts === 1 ? 'Loading your food story...' : `Waking up server... attempt ${attempts}`;
-      
-      const res = await fetch('/api/insights');
-      
-      if (!res.ok) throw new Error('Server error');
-      
+      statusEl.textContent = i === 1 ? 'Loading your food story...' : `Waking up... (${i}/6)`;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 12000);
+      const res = await fetch('/api/insights', { signal: controller.signal });
+      clearTimeout(timeout);
+      if (!res.ok) throw new Error('bad response');
       const json = await res.json();
       data = json.data;
       populateUI(data);
@@ -250,64 +20,47 @@ async function loadInsights() {
       buildDots();
       updateNav();
       return;
-      
     } catch(e) {
-      if (attempts < maxAttempts) {
-        document.querySelector('#loading .sub').textContent = 
-          `Server is waking up... (${attempts}/${maxAttempts})`;
-        await new Promise(r => setTimeout(r, 15000));
+      if (i < 6) {
+        statusEl.textContent = `Server waking up... (${i}/6)`;
+        await new Promise(r => setTimeout(r, 12000));
       } else {
-        document.querySelector('#loading .sub').textContent = 
-          'Taking longer than usual — please refresh the page.';
+        statusEl.textContent = 'Please refresh the page once.';
       }
     }
   }
 }
 
-// ─── POPULATE ALL CARDS WITH REAL DATA ───────────────────────────────────────
 function populateUI(d) {
   const fmt = n => '₹' + n.toLocaleString('en-IN');
   const freq = Math.round(365 / d.totalOrders);
-
-  // Card 1
   document.getElementById('c1-orders').textContent = d.totalOrders;
   document.getElementById('c1-freq').textContent = `every ${freq} days`;
   document.getElementById('c1-spent').textContent = fmt(d.totalSpent);
   document.getElementById('c1-rests').textContent = d.totalRestaurants;
   document.getElementById('c1-cuisines').textContent = d.totalCuisines;
-
-  // Card 2
   document.getElementById('c2-dish').textContent = d.topDish.name.toUpperCase();
   document.getElementById('c2-count').textContent = d.topDish.count;
   document.getElementById('c2-avg').textContent = `${fmt(d.topDish.avgPrice)} avg per order`;
-
-  // Card 3
   document.getElementById('c3-rest').textContent = d.topRestaurant.name.toUpperCase();
   document.getElementById('c3-count').textContent = d.topRestaurant.orders;
   document.getElementById('c3-orders').textContent = d.topRestaurant.orders;
   document.getElementById('c3-spent').textContent = fmt(d.topRestaurant.totalSpent);
   document.getElementById('c3-rating').textContent = d.topRestaurant.avgRating + '★';
-
-  // Card 4
   document.getElementById('c4-hour').textContent = d.peakHour;
-  document.getElementById('c4-pct').textContent = '38%';
+  document.getElementById('c4-pct').textContent = d.lateNightPct + '%';
   buildTimeline(d.peakHourData);
-
-  // Card 5
   buildBars(d.cuisines);
-
-  // Card 6
   document.getElementById('c6-total').textContent = fmt(d.totalSpent);
-  document.getElementById('c6-monthly').textContent = fmt(d.montlyAvg);
-  document.getElementById('c6-avg').textContent = fmt(d.montlyAvg);
+  document.getElementById('c6-monthly').textContent = fmt(d.monthlyAvg);  // FIXED
+  document.getElementById('c6-avg').textContent = fmt(d.monthlyAvg);      // FIXED
   document.getElementById('c6-order').textContent = fmt(d.avgOrderValue);
   document.getElementById('c6-saved').textContent = fmt(d.couponsSaved);
-
-  // Card 7
   document.getElementById('c7-emoji').textContent = d.personality.emoji;
   document.getElementById('c7-type').textContent = d.personality.type;
   document.getElementById('c7-desc').textContent = d.personality.desc;
   const tagsEl = document.getElementById('c7-tags');
+  tagsEl.innerHTML = '';
   const tagColors = ['pill-orange','pill-green','pill-red'];
   d.personality.tags.forEach((t,i) => {
     const s = document.createElement('span');
@@ -315,8 +68,6 @@ function populateUI(d) {
     s.textContent = t;
     tagsEl.appendChild(s);
   });
-
-  // Card 8
   document.getElementById('c8-name').textContent = d.name.toUpperCase() + "'S WRAPPED";
   document.getElementById('s-orders').textContent = d.totalOrders;
   document.getElementById('s-spent').textContent = fmt(d.totalSpent);
@@ -371,8 +122,6 @@ function go(idx) {
   cards[cur].classList.add('active');
   updateDots();
   updateNav();
-
-  // animate bars on card 5
   if(cur === 4) {
     setTimeout(() => {
       document.querySelectorAll('.bar-fill').forEach(b => {
@@ -382,11 +131,8 @@ function go(idx) {
       });
     }, 200);
   }
-
-  // animate timeline on card 4
   if(cur === 3) {
-    const bars = document.querySelectorAll('.tl-bar');
-    bars.forEach(b => {
+    document.querySelectorAll('.tl-bar').forEach(b => {
       const h = b.style.height;
       b.style.height = '4px';
       setTimeout(() => b.style.height = h, 150);
@@ -409,6 +155,3 @@ document.addEventListener('keydown',e=>{
 });
 
 loadInsights();
-</script>
-</body>
-</html>
