@@ -229,17 +229,38 @@ let data = null;
 
 // ─── FETCH INSIGHTS FROM SERVER ───────────────────────────────────────────────
 async function loadInsights() {
-  try {
-    const res = await fetch('/api/insights', { signal: AbortSignal.timeout(60000) });
-    const json = await res.json();
-    data = json.data;
-    populateUI(data);
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('wrap').style.display = 'block';
-    buildDots();
-    updateNav();
-  } catch(e) {
-    document.querySelector('#loading .sub').textContent = 'Something went wrong. Is the server running?';
+  let attempts = 0;
+  const maxAttempts = 5;
+  
+  while (attempts < maxAttempts) {
+    try {
+      attempts++;
+      document.querySelector('#loading .sub').textContent = 
+        attempts === 1 ? 'Loading your food story...' : `Waking up server... attempt ${attempts}`;
+      
+      const res = await fetch('/api/insights');
+      
+      if (!res.ok) throw new Error('Server error');
+      
+      const json = await res.json();
+      data = json.data;
+      populateUI(data);
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('wrap').style.display = 'block';
+      buildDots();
+      updateNav();
+      return;
+      
+    } catch(e) {
+      if (attempts < maxAttempts) {
+        document.querySelector('#loading .sub').textContent = 
+          `Server is waking up... (${attempts}/${maxAttempts})`;
+        await new Promise(r => setTimeout(r, 15000));
+      } else {
+        document.querySelector('#loading .sub').textContent = 
+          'Taking longer than usual — please refresh the page.';
+      }
+    }
   }
 }
 
