@@ -7,13 +7,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;background:#0A0A0A}
+html,body{width:100%;height:100%;background:linear-gradient(135deg,#0A0A0A 0%,#1a1410 100%)}
 :root{
   --bg:#111008;--orange:#FC8019;--orange2:#FF9A45;--cream:#FFF3E0;
   --dim:#8A7560;--white:#FDFAF5;--green:#4ADE80;--red:#F87171;
   --display:'Bebas Neue',sans-serif;--body:'Plus Jakarta Sans',sans-serif;
 }
-body{display:flex;align-items:center;justify-content:center;font-family:var(--body);min-height:100vh;width:100vw;overflow:hidden}
+body{display:flex;align-items:center;justify-content:center;font-family:var(--body);min-height:100vh;width:100vw;overflow:hidden;background:linear-gradient(135deg,#0A0A0A 0%,#1a1410 100%)}
 #wrap{font-family:var(--body);background:var(--bg);border-radius:28px;overflow:hidden;position:relative;width:480px;height:720px;box-shadow:0 40px 120px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06)}
 #wrap::before{content:'';position:absolute;inset:0;opacity:.4;pointer-events:none;z-index:10;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E")}
 .dots{position:absolute;top:22px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:20}
@@ -65,7 +65,15 @@ body{display:flex;align-items:center;justify-content:center;font-family:var(--bo
 #loading .sub{font-size:14px;color:var(--dim);margin-top:8px;font-family:var(--body)}
 #loading .spinner{width:32px;height:32px;border:3px solid rgba(252,128,25,.2);border-top-color:var(--orange);border-radius:50%;animation:spin 1s linear infinite;margin-top:24px}
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(252,128,25,.3)}50%{box-shadow:0 0 40px rgba(252,128,25,.6)}}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.swiggy-badge{animation:slideIn .6s ease-out}
+.dot.active{animation:glowPulse 2s infinite}
+#wrap{animation:scaleIn .8s cubic-bezier(.34,1.56,.64,1)}
 .card.active .eyebrow{animation:fadeUp .4s .1s both}
 .card.active .hero-num{animation:fadeUp .5s .2s both}
 .card.active .hero-sub{animation:fadeUp .5s .32s both}
